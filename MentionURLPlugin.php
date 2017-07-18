@@ -21,10 +21,10 @@ class MentionURLPlugin extends Plugin
 
         foreach ($atmatches[1] as $match) {
             $url = $match[0];
-            if(!common_valid_http_url($url)) { $url = 'http://' . $url; }
+            $match_without_protocol = preg_replace('/^https?:\/\//', '', $match[0], 1);
             if(common_valid_http_url($url)) {
                 $mentioned = Mention_url_profile::fromUrl($url);
-                $text = mb_strlen($mentioned->nickname) <= mb_strlen($match[0]) ? $mentioned->nickname : $match[0];
+                $text = mb_strlen($mentioned->nickname) <= mb_strlen($match[0]) ? $mentioned->nickname : $match_without_protocol;
             }
 
             if($mentioned instanceof Profile) {
