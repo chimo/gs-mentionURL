@@ -87,15 +87,19 @@ class Mention_url_profile extends Managed_DataObject
             }
 
             $mention_profile->profileurl = $profile->profileurl;
-            if(!$mention_profile->insert()) {
+
+            try {
+                $mention_profile->insert();
+
+                $mention_profile->query('COMMIT');
+            } catch (Exception $e) {
                 $mention_profile->query('ROLLBACK');
+
                 if($depth > 0) {
                     return null;
                 } else {
                     return self::fromUrl($url, $depth+1);
                 }
-            } else {
-                $mention_profile->query('COMMIT');
             }
         }
 
@@ -104,7 +108,9 @@ class Mention_url_profile extends Managed_DataObject
 
     protected static function findProfileByProfileURL($url) {
         $profile = Profile::getKV('profileurl', $url);
-        if($profile instanceof Profile) {
+        $mention_profile = Mention_url_profile::getKV('profileurl', $url);
+
+        if($profile instanceof Profile && !($mention_profile instanceof Mention_url_profile)) {
             $mention_profile = new Mention_url_profile();
             $mention_profile->profile_id = $profile->id;
             $mention_profile->profileurl = $profile->profileurl;
