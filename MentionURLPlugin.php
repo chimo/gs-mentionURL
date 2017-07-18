@@ -14,7 +14,7 @@ class MentionURLPlugin extends Plugin
     {
         $matches = array();
 
-        preg_match_all('/(?:^|\s+)@([A-Za-z0-9_:\-\.\/%]+)\b/',
+        preg_match_all('/(?:^|\s+)@(https?:\/\/[A-Za-z0-9_:\-\.\/%]+)/',
                        $text,
                        $atmatches,
                        PREG_OFFSET_CAPTURE);
