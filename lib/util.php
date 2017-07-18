@@ -49,7 +49,7 @@ function mention_url_representative_hcard($url, $fn=null, $mf2=null) {
         $hcard = array('name' => array($match[1]));
     }
 
-    if($hcard && !$hcard['url']) {
+    if($hcard && !isset($hcard['url'])) {
         $hcard['url'] = array($url);
     }
 

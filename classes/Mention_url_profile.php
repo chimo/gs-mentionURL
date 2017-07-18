@@ -43,6 +43,8 @@ class Mention_url_profile extends Managed_DataObject
     public static function fromUrl($url, $depth=0) {
         common_debug('MentionURL: trying to find a profile for ' . $url);
 
+        $profile = null;
+
         $url = preg_replace('#https?://#', 'https://', $url);
         try {
             $profile = Profile::fromUri($url);
@@ -74,7 +76,7 @@ class Mention_url_profile extends Managed_DataObject
             $profile->profileurl = $hcard['url'][0];
             $profile->fullname = $hcard['name'][0];
             preg_match('/\/([^\/]+)\/*$/', $profile->profileurl, $matches);
-            if(!$hcard['nickname']) $hcard['nickname'] = array($matches[1]);
+            if(!isset($hcard['nickname'])) $hcard['nickname'] = array($matches[1]);
             $profile->nickname = $hcard['nickname'][0];
             $profile->created = common_sql_now();
 
